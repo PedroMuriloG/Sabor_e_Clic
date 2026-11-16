@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Sabor & Clic - Cadastro de Cliente{% endblock %}
+
+{% block conteudo %}
+<h2>🍓 Cadastro de Novo Cliente</h2>
+
+<div class="card" style="max-width: 400px; margin: 0 auto;">
+  <form action="{{ url_for('auth.register') }}" method="POST">
+    <div class="form-group">
+      <label for="username">Nome de Utilizador</label>
+      <input type="text" id="username" name="username" placeholder="Escolha um nome de usuário" required>
+    </div>
+    
+    <div class="form-group">
+      <label for="password">Palavra-passe / Senha</label>
+      <input type="password" id="password" name="password" placeholder="••••••••" required>
+    </div>
+    
+    <button type="submit" class="btn" style="width: 100%;">Criar Conta</button>
+  </form>
+  
+  <p style="margin-top: 15px; text-align: center; font-size: 0.85rem;">
+    Já tem uma conta? <a href="{{ url_for('auth.login') }}" style="color: var(--burgundy); font-weight: bold;">Faça login aqui</a>
+  </p>
+</div>
+{% endblock %}

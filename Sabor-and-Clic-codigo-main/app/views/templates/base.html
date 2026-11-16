@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Sabor & Clic{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Comfortaa:wght@500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+  <!-- CABEÇALHO -->
+  <header>
+    <div class="brand">
+        <a href="{{url_for ('main.welcome')}}"><img src="{{ url_for('static', filename='logo.png') }}" alt="Logotipo Sabor & Clic" style="height: 100px; width: auto;"></a>
+    </div>
+
+    {% if session.get('user') %}
+    <div class="role-selector-container">
+      <span style="font-size: 0.85rem; font-weight: bold; color: var(--burgundy);">
+        Olá, {{ session.get('user') }} ({{ session.get('tipo')|capitalize }})
+      </span>
+      <a href="{{ url_for('auth.logout') }}" class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.8rem; text-decoration: none;">Terminar Sessão</a>
+    </div>
+    {% else %}
+    <div>
+      <a href="{{url_for('auth.login')}}" style="background: var(--gold-yellow); color: var(--burgundy); border: 2px solid var(--burgundy); padding: 6px 18px; border-radius: 12px; font-size: 0.9rem; font-weight: bold; text-decoration: none; box-shadow: 2px 2px 0px var(--burgundy);"">Login</a>
+    </div>
+    {% endif %}
+  </header>
+
+  <!-- SCRAPBOOK PAPER -->
+  <div class="scrapbook-paper">
+    <div class="washi-tape"></div>
+    <div class="sticker-apple">🍎</div>
+
+    <!-- ABAS DINÂMICAS DO FLASK POR PERFIL DE USUÁRIO -->
+    {% if session.get('tipo') == 'cliente' %}
+    <nav class="tabs-nav">
+      <a href="{{ url_for('client.catalogo') }}" class="tab-btn {% if request.endpoint == 'client.catalogo' or request.endpoint == 'client.pratos_bancada' %}active{% endif %}">🍎 Catálogo & Bancadas</a>
+      <a href="{{ url_for('client.carrinho') }}" class="tab-btn {% if request.endpoint == 'client.carrinho' %}active{% endif %}">🛒 Meu Carrinho & Histórico</a>
+      <a href="{{ url_for('client.reservar_bancada') }}" class="tab-btn {% if request.endpoint == 'client.reservar_bancada' %}active{% endif %}">🏢 Reservar Bancada</a>
+    </nav>
+    {% elif session.get('tipo') == 'chef' %}
+    <nav class="tabs-nav">
+      <a href="{{ url_for('chef.kds') }}" class="tab-btn {% if request.endpoint == 'chef.kds' %}active{% endif %}">🍳 Pedidos da Cozinha (KDS)</a>
+      <a href="{{ url_for('chef.novo_prato') }}" class="tab-btn {% if request.endpoint == 'chef.novo_prato' %}active{% endif %}">📜 Criar Pratos / Ficha Técnica</a>
+      <a href="{{ url_for('chef.gerenciar_pratos') }}" class="tab-btn {% if request.endpoint == 'chef.gerenciar_pratos' %}active{% endif %}">🗑️ Gerenciar & Excluir Pratos</a>
+    </nav>
+    {% endif %}
+
+    <!-- MENSAGENS FLASH -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div style="margin-bottom: 20px;">
+          {% for category, message in messages %}
+            <div style="background: {% if category == 'danger' or category == 'warning' %}#ffeaa7{% else %}#55efc4{% endif %}; border: 2px solid var(--olive-green); padding: 12px; border-radius: 8px; font-weight: bold; margin-bottom: 8px; color: var(--text-dark);">
+              {{ message }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <!-- CONTEÚDO DA PÁGINA -->
+    {% block conteudo %}{% endblock %}
+
+  </div>
+
+</body>
+</html>
