@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block title %}Cozinheiro - Criar Novo Prato{% endblock %}
+
+{% block conteudo %}
+<h2>📜 Criar Ficha Técnica & Novo Prato</h2>
+
+<div class="card" style="max-width: 750px; margin: 0 auto;">
+  <form action="{{ url_for('chef.novo_prato') }}" method="POST">
+    
+    <div class="form-group">
+      <label>Nome do Prato</label>
+      <input type="text" name="nome" placeholder="ex: Torta Artesanal de Maçã" required>
+    </div>
+
+    <div style="display: flex; gap: 15px;">
+      <div class="form-group" style="flex: 1;">
+        <label>Preço de Venda (R$)</label>
+        <input type="number" step="0.01" name="preco" placeholder="24.90" required>
+      </div>
+
+      <div class="form-group" style="flex: 1;">
+        <label>Tempo de Preparo + Entrega (min)</label>
+        <input type="number" name="tempo_preparo" placeholder="30" required>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>URL da Foto do Prato</label>
+      <input type="text" name="foto_url" placeholder="http://exemplo.com/foto.jpg">
+    </div>
+
+    <div class="form-group">
+      <label>Bancada de Destino</label>
+      <input type="text" value="{{ bancada_chef.bancada_nome if bancada_chef else 'Sua Bancada' }}" disabled style="background: #EFE4D6; font-weight: bold; color: var(--burgundy);">
+    </div>
+
+    <!-- TABELA DINÂMICA DE INGREDIENTES DA RECEITA -->
+    <div class="form-group" style="margin-top: 20px;">
+      <label style="font-size: 1.1rem; color: var(--burgundy);">Ingredientes do Prato (Cadastrados pelo Cozinheiro):</label>
+      <p style="font-size: 0.8rem; color: #666; margin-bottom: 10px;">Adicione os ingredientes, a quantidade necessária por porção e o preço unitário de custo.</p>
+
+      <table id="tabelaIngredientes" style="width: 100%;">
+        <thead>
+          <tr>
+            <th>Nome do Ingrediente</th>
+            <th style="width: 140px;">Qtd na Receita</th>
+            <th style="width: 140px;">Preço Custo (R$)</th>
+            <th style="width: 50px;">Ação</th>
+          </tr>
+        </thead>
+        <tbody id="containerLinhas">
+          <!-- Primeira linha padrão -->
+          <tr>
+            <td>
+              <input type="text" name="ingrediente_nome[]" placeholder="ex: Maçã Fuji" required>
+            </td>
+            <td>
+              <input type="number" name="ingrediente_qtd[]" min="1" value="1" required>
+            </td>
+            <td>
+              <input type="number" step="0.01" name="ingrediente_preco[]" placeholder="4.50" required>
+            </td>
+            <td style="text-align: center;">
+              <button type="button" class="btn btn-secondary" onclick="removerLinha(this)" style="padding: 4px 8px;">✕</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <button type="button" class="btn" onclick="adicionarLinha()" style="margin-top: 10px; background: var(--beige-warm); color: var(--text-dark);">
+        + Adicionar Outro Ingrediente
+      </button>
+    </div>
+
+    <button type="submit" class="btn" style="width: 100%; margin-top: 20px; font-size: 1.1rem;">
+      Salvar Prato & Cadastrar Ingredientes
+    </button>
+  </form>
+</div>
+
+<!-- SCRIPT PARA ADICIONAR E REMOVER LINHAS NA TABELA -->
+<script>
+  function adicionarLinha() {
+    const tbody = document.getElementById('containerLinhas');
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>
+        <input type="text" name="ingrediente_nome[]" placeholder="ex: Canela em pó" required>
+      </td>
+      <td>
+        <input type="number" name="ingrediente_qtd[]" min="1" value="1" required>
+      </td>
+      <td>
+        <input type="number" step="0.01" name="ingrediente_preco[]" placeholder="2.00" required>
+      </td>
+      <td style="text-align: center;">
+        <button type="button" class="btn btn-secondary" onclick="removerLinha(this)" style="padding: 4px 8px;">✕</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  }
+
+  function removerLinha(botao) {
+    const tbody = document.getElementById('containerLinhas');
+    if (tbody.children.length > 1) {
+      botao.closest('tr').remove();
+    } else {
+      alert("O prato precisa ter pelo menos 1 ingrediente!");
+    }
+  }
+</script>
+{% endblock %}

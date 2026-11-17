@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}Reservar Bancada{% endblock %}
+
+{% block conteudo %}
+<h2>📅 Reservar Bancada ou Mesas</h2>
+
+<!-- TABELA DE RESERVAS DO CLIENTE -->
+<div class="card" style="margin-bottom: 25px;">
+  <div class="card-title">Suas Reservas Ativas</div>
+  <table>
+    <thead>
+      <tr>
+        <th># N° Reserva</th>
+        <th>Bancada</th>
+        <th>Tipo</th>
+        <th>Mesas</th>
+        <th>Data</th>
+        <th>Início</th>
+        <th>Término</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for res in minhas_reservas %}
+      <tr>
+        <td>#{{ res.id }}</td>
+        <td><strong>{{ res.bancada_nome }}</strong></td>
+        <td>{{ res.tipo_reserva|capitalize }}</td>
+        <td>{{ res.quantidade_mesas }} mesa(s)</td>
+        <td>{{ res.data_reserva }}</td>
+        <td>{{ res.hora_inicio }}</td>
+        <td>{{ res.hora_fim }}</td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="7" style="text-align: center;">Você ainda não possui nenhuma reserva cadastrada.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- FORMULÁRIO DE NOVA RESERVA -->
+<div class="card" style="max-width: 600px; margin: 0 auto;">
+  <div class="card-title">Nova Reserva</div>
+  <form action="{{ url_for('client.reservar_bancada') }}" method="POST">
+    
+    <div class="form-group">
+      <label>Selecione a Bancada</label>
+      <select name="bancada_id" required>
+        {% for b in bancadas %}
+          <option value="{{ b.id }}">{{ b.nome }} (Capacidade: {{ b.capacidade_mesas }} mesas)</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Tipo de Reserva</label>
+      <select name="tipo_reserva" id="tipoReserva" onchange="toggleMesas()" required>
+        <option value="inteira">Bancada Inteira (Todas as mesas)</option>
+        <option value="parcial">Quantidade Específica de Mesas</option>
+      </select>
+    </div>
+
+    <div class="form-group" id="grupoQtdMesas" style="display: none;">
+      <label>Número de Mesas Desejadas</label>
+      <input type="number" name="quantidade_mesas" min="1" value="1">
+    </div>
+
+    <div class="form-group">
+      <label>Data da Reserva</label>
+      <input type="date" name="data_reserva" required>
+    </div>
+
+    <div class="form-group">
+      <label>Horário de Início</label>
+      <input type="time" name="hora_inicio" required>
+    </div>
+
+    <div class="form-group">
+      <label>Horário de Término (Limite da Reserva)</label>
+      <input type="time" name="hora_fim" required>
+    </div>
+
+    <button type="submit" class="btn" style="width: 100%; margin-top: 15px;">Confirmar Reserva</button>
+  </form>
+</div>
+
+<script>
+  function toggleMesas() {
+    const tipo = document.getElementById('tipoReserva').value;
+    const grupo = document.getElementById('grupoQtdMesas');
+    if (tipo === 'parcial') {
+      grupo.style.display = 'block';
+    } else {
+      grupo.style.display = 'none';
+    }
+  }
+</script>
+{% endblock %}

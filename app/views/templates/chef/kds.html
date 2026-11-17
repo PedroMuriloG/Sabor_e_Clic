@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Cozinha - Painel KDS{% endblock %}
+
+{% block conteudo %}
+<h2>🍳 Painel da Cozinha (KDS - Tempo Real)</h2>
+
+<div class="grid-cards">
+  {% for pedido in pedidos %}
+  <div class="card">
+    <div class="card-title">Pedido #{{ pedido.id }} ({{ pedido.tipo_pedido|capitalize }})</div>
+    <div style="font-size: 0.85rem; color: #666; margin-bottom: 10px;">Criado em: {{ pedido.criado_em }}</div>
+    <p><strong>Status Atual:</strong> <span class="badge badge-preparing">{{ pedido.status }}</span></p>
+    
+    <form action="{{ url_for('chef.atualizar_status', pedido_id=pedido.id) }}" method="POST" style="margin-top: 15px;">
+      <div class="form-group">
+        <label>Atualizar Status:</label>
+        <select name="status" onchange="this.form.submit()">
+          <option value="Recebido" {% if pedido.status == 'Recebido' %}selected{% endif %}>Recebido</option>
+          <option value="Em preparo" {% if pedido.status == 'Em preparo' %}selected{% endif %}>Em preparo</option>
+          <option value="Pronto" {% if pedido.status == 'Pronto' %}selected{% endif %}>Pronto</option>
+          <option value="Entregue" {% if pedido.status == 'Entregue' %}selected{% endif %}>Entregue</option>
+        </select>
+      </div>
+    </form>
+  </div>
+  {% else %}
+  <p>Nenhum pedido pendente no momento!</p>
+  {% endfor %}
+</div>
+{% endblock %}

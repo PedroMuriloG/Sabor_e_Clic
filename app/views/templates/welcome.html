@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Sabor & Clic{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Comfortaa:wght@500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+  <!-- CABEÇALHO -->
+  <header>
+    <div class="brand">
+        <a href="{{url_for ('main.welcome')}}"><img src="{{ url_for('static', filename='logo.png') }}" alt="Logotipo Sabor & Clic" style="height: 100px; width: auto;"></a>
+    </div>
+
+    <div>
+      <a href="{{url_for('auth.login')}}" style="background: var(--gold-yellow); color: var(--burgundy); border: 2px solid var(--burgundy); padding: 6px 18px; border-radius: 12px; font-size: 0.9rem; font-weight: bold; text-decoration: none; box-shadow: 2px 2px 0px var(--burgundy);"">Login</a>
+    </div>
+  </header>
+
+  <!-- SCRAPBOOK PAPER -->
+  <div class="scrapbook-paper">
+    <div class="washi-tape"></div>
+    <div class="sticker-apple">🍎</div>
+
+    <!-- MENSAGENS FLASH -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div style="margin-bottom: 20px;">
+          {% for category, message in messages %}
+            <div style="background: {% if category == 'danger' or category == 'warning' %}#ffeaa7{% else %}#55efc4{% endif %}; border: 2px solid var(--olive-green); padding: 12px; border-radius: 8px; font-weight: bold; margin-bottom: 8px; color: var(--text-dark);">
+              {{ message }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+  <div style="text-align: center; padding: 20px;">
+    <!-- Título Convidativo -->
+    <h2 style="font-size: 3rem; color: var(--burgundy); margin-bottom: 10px;">
+      ✨ Bem-vindo ao Festival de Dark Kitchens! 🍳
+    </h2>
+    <p style="font-size: 1.2rem; color: #555; max-width: 700px; margin: 0 auto 30px auto; font-family: 'Comfortaa', cursive;">
+      Mergulhe em uma experiência culinária inovadora! Venha saborear pratos incríveis preparados nas nossas bancadas exclusivas, peça no conforto da sua casa ou garanta o seu lugar no evento.
+    </p>
+
+    <!-- Destaques / O que você pode fazer -->
+    <div class="grid-cards" style="margin-top: 30px; text-align: left;">
+      
+      <!-- Card 1: Presencial & Bancadas -->
+      <div class="card">
+        <div class="card-title" style="font-size: 1.3rem;">🍜 Pedidos nas Bancadas</div>
+        <p style="margin: 10px 0; font-size: 0.95rem; color: #444;">
+          Está visitando o evento presencialmente? Explore as bancadas ativas do turno, escolha suas delícias favoritas e o sistema aloca uma mesa para você curtir na hora!
+        </p>
+        <a href="{{ url_for('client.catalogo') }}" class="btn" style="display: inline-block; margin-top: 10px; text-align: center;">Ver Catálogo</a>
+      </div>
+
+      <!-- Card 2: Delivery -->
+      <div class="card">
+        <div class="card-title" style="font-size: 1.3rem;">🛵 Delivery Rápido</div>
+        <p style="margin: 10px 0; font-size: 0.95rem; color: #444;">
+          Prefere saborear em casa? Nossas cozinhas preparadas no esquema de Dark Kitchen entregam o seu pedido quentinho direto no seu endereço cadastrado.
+        </p>
+        <a href="{{ url_for('client.catalogo') }}" class="btn btn-secondary" style="display: inline-block; margin-top: 10px; text-align: center;">Pedir Delivery</a>
+      </div>
+
+      <!-- Card 3: Reservas -->
+      <div class="card">
+        <div class="card-title" style="font-size: 1.3rem;">📅 Reserva de Bancadas</div>
+        <p style="margin: 10px 0; font-size: 0.95rem; color: #444;">
+          Planejando vir com os amigos? Faça uma reserva antecipada da bancada e horário desejado para garantir seu espaço no nosso festival gastronômico.
+        </p>
+        <a href="{{ url_for('client.reservar_bancada') }}" class="btn" style="background-color: var(--gold-yellow); color: var(--burgundy); display: inline-block; margin-top: 10px; text-align: center;">Reservar Agora</a>
+      </div>
+
+    </div>
+
+    <!-- Rodapé Chamativo da Página de Welcome -->
+    <div style="margin-top: 50px; background: #FFF8E7; border: 2px dashed var(--gold-yellow); padding: 20px; border-radius: 12px;">
+      <h3 style="color: var(--burgundy); font-family: 'Caveat', cursive; font-size: 2rem; margin-bottom: 5px;">
+        Pronto para saborear essa experiência?
+      </h3>
+      <p style="margin-bottom: 15px; font-size: 0.95rem;">Faça login na sua conta ou acesse o painel para começar a explorar os pratos do dia!</p>
+      <a href="{{ url_for('client.catalogo') }}" class="btn" style="padding: 10px 25px; font-size: 1.1rem; margin-top: 10px; display: inline-block;">Acessar Sistema</a>
+    </div>
+
+  </div>
+
+  </div>
+
+</body>
+</html>
