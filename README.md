@@ -24,5 +24,5 @@ Para rodar:
 
 - Instalar Flask
 - Instalar dotenv dentro do ambiente virtual com pip install python-dotenv
-- Crie o banco de dados com python iniciar_db.py (se ainda não tiver banco de dados)
+- Crie o banco de dados com python iniciar_db.py (se ainda não tiver o arquivo .db)
 - Inicie o servidor com python run.py
